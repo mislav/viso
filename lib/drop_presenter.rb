@@ -44,6 +44,8 @@ private
       else
         :image
       end
+    elsif video?
+      :video
     elsif text?
       if beta?
         :new_markdown

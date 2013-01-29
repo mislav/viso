@@ -48,6 +48,12 @@ class Drop
         .png ).include? extension
   end
 
+  def video?
+    %w( .mov
+        .mp4
+        .m4v ).include? extension
+  end
+
   def plain_text?
     extension == '.txt'
   end
