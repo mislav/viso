@@ -1,3 +1,11 @@
-<section id="video" class="wrapper">
-  <video autoplay src="<%= drop.content_url %>"></video>
+<section id=video class=wrapper>
+  <video autoplay id=content src="<%= drop.content_url %>">
+    <figure class="<%= drop.item_type %>"></figure>
+
+    <h2><%= escape_html drop.name %></h2>
+
+    <p>
+      <a href="<%= drop.download_url %>">Download</a>
+    </p>
+  </video>
 </section>
