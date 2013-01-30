@@ -3,14 +3,23 @@ require 'last_modified_or_deployed'
 require 'metriks'
 require 'sinatra/respond_with'
 require 'social_helper'
+require 'erb'
+require 'ostruct'
 
 module Configuration
-  def self.registered(subject)
-    Configurer.new(subject).inject
+  def self.config_file
+    "config/settings.yml"
   end
 
+  def self.registered(app)
+    Configurer.new(app).inject config_file
+  end
+
+  # Runs in the context of a Sinatra application
   class Configurer < SimpleDelegator
-    def inject
+    def inject config_file
+      apply_settings config_file
+
       add_metriks_instrumentation
       add_new_relic_instrumentation
       catch_errors_with_airbrake
@@ -23,12 +32,26 @@ module Configuration
       report_metrics
     end
 
+    def apply_settings config_file
+      load_settings(config_file, environment).each do |key, value|
+        value = OpenStruct.new(value) if value.is_a? Hash
+        set(key, value)
+      end
+    end
+
+    def load_settings file, env
+      data = YAML.load ERB.new(IO.read(file)).result
+      data[env.to_s]
+    end
+
     def add_metriks_instrumentation
       require 'metriks/middleware'
       use Metriks::Middleware
     end
 
     def add_new_relic_instrumentation
+      return unless new_relic.license_key
+
       configure :production do
         require 'newrelic_rpm'
       end
@@ -50,13 +73,13 @@ module Configuration
 
     def catch_errors_with_airbrake
       configure :production do
-        if ENV['AIRBRAKE_API_KEY']
+        if airbrake.api_key
           require 'active_support'
           require 'active_support/core_ext/object/blank'
           require 'airbrake'
 
           Airbrake.configure do |config|
-            config.api_key = ENV['AIRBRAKE_API_KEY']
+            config.api_key = airbrake.api_key
           end
 
           use Airbrake::Rack
@@ -80,7 +103,15 @@ module Configuration
       register SocialHelper
       helpers do
         include Rack::Utils
-        include LastModifiedOrDeployed
+
+        def last_modified(modified)
+          last_deployed = Time.at settings.assets.timestamp.to_i
+          super(modified > last_deployed ? modified : last_deployed)
+        end
+
+        def typekit_token
+          settings.typekit.token
+        end
       end
     end
 
@@ -88,10 +119,9 @@ module Configuration
       before { headers['Vary'] = 'Accept' }
     end
 
-    # Cache public assets for 1 year.
     def serve_public_assets
-      set :root, File.expand_path(File.join(File.dirname(settings.app_file), '..'))
-      set :static_cache_control, [ :public, :max_age => 31557600 ]
+      set :root, File.expand_path('../..', settings.app_file)
+      set :static_cache_control, [ :public, :max_age => assets.expires_in ]
       set :public_folder, 'public'
     end
 
@@ -100,17 +130,14 @@ module Configuration
     end
 
     def report_metrics
-      user  = ENV['LIBRATO_METRICS_USER']
-      token = ENV['LIBRATO_METRICS_TOKEN']
-      if user && token
+      if librato.user && librato.token
         require 'metriks/reporter/librato_metrics'
         require 'socket'
 
-        prefix   = ENV['LIBRATO_METRICS_PREFIX']
         source   = Socket.gethostname
         on_error = ->(e) do STDOUT.puts("LibratoMetrics: #{ e.message }") end
-        Metriks::Reporter::LibratoMetrics.new(user, token,
-                                              prefix:   prefix,
+        Metriks::Reporter::LibratoMetrics.new(librato.user, librato.token,
+                                              prefix:   librato.prefix,
                                               on_error: on_error,
                                               source:   source).start
       elsif development?

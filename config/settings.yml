@@ -1,0 +1,37 @@
+# This file only contains values that are safe to put in version control. Other
+# secrets, such as API keys, can be configured via environment variables or in
+# unversioned `config/settings.local.yml`.
+defaults: &defaults
+  cloudapp:
+    api_host:    <%= ENV['CLOUDAPP_DOMAIN']   || "api.cld.me" %>
+    domains:     <%= ENV['DEFAULT_DOMAINS']   || "cl.ly www.cl.ly localhost" %>
+  assets:
+    host:        <%= ENV['CLOUDFRONT_DOMAIN'] || "d23tod3mb75lgr.cloudfront.net" %>
+    timestamp:   <%= ENV['RAILS_ASSET_ID']    || "1359149360" %>
+    expires_in:  <%= ENV['ASSETS_EXPIRES_IN'] || 60 * 60 * 24 * 365 %>
+  typekit:
+    token:       <%= ENV['TYPEKIT_TOKEN'] %>
+  airbrake:
+    api_key:     <%= ENV['AIRBRAKE_API_KEY'] %>
+  librato:
+    prefix:      <%= ENV['LIBRATO_METRICS_PREFIX'] %>
+    token:       <%= ENV['LIBRATO_METRICS_TOKEN'] %>
+    user:        <%= ENV['LIBRATO_METRICS_USER'] %>
+  new_relic:
+    app_name:    <%= ENV['NEW_RELIC_APP_NAME'] %>
+    license_key: <%= ENV['NEW_RELIC_LICENSE_KEY'] %>
+  google_analytics:
+    domain:      <%= ENV['GOOGLE_ANALYTICS_DOMAIN'] %>
+    token:       <%= ENV['GOOGLE_ANALYTICS_TOKEN'] %>
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+production:
+  <<: *defaults

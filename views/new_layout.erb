@@ -14,7 +14,9 @@
 
   <%= include_javascripts :new_viso %>
 
-  <script type="text/javascript" src="//use.typekit.com/hul1akx.js" onload="try{Typekit.load();}catch(e){}" async></script>
+  <% if typekit_token %>
+    <script type="text/javascript" src="//use.typekit.com/<%= typekit_token %>.js" onload="try{Typekit.load();}catch(e){}" async></script>
+  <% end %>
 </head>
 
 <body id="<%= body_id %>">
