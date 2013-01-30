@@ -6,48 +6,52 @@ require 'drop'
 class DropFetcher
   class NotFound < StandardError; end
 
-  @base_uri = ENV.fetch 'CLOUDAPP_DOMAIN', 'api.cld.me'
-  def self.base_uri() @base_uri end
+  attr_reader :api_host, :drop_factory, :response_parser, :logger
 
-  @default_domains = ENV.fetch('DEFAULT_DOMAINS', 'cl.ly www.cl.ly').split(' ')
-  def self.default_domains() @default_domains end
-
-  def self.fetch(slug)
-    Drop.new slug, Yajl::Parser.parse(fetch_drop_content(slug),
-                                      :symbolize_keys => true)
+  def initialize(options)
+    @api_host = options.fetch(:api_host)
+    @drop_factory = options.fetch(:drop_factory, Drop.method(:new))
+    @response_parser = options.fetch(:response_parser, Yajl::Parser.method(:parse))
+    @logger = options.fetch(:logger, $stdout.method(:puts))
   end
 
-  def self.record_view(slug)
-    http = EM::HttpRequest.
-             new("http://#{ DropFetcher.base_uri }/#{ slug }/view").
-             apost
+  def api_url(path)
+    File.join('http://', api_host, path.to_s)
+  end
+
+  def fetch(slug)
+    data = fetch_content(slug)
+    drop_factory.call(slug, parse_content(data))
+  end
+
+  def parse_content(data)
+    response_parser.call(data, :symbolize_keys => true)
+  end
+
+  def http_request(url)
+    EM::HttpRequest.new(url)
+  end
+
+  def record_view(slug)
+    http = http_request(api_url(slug) + "/view").apost
     http.callback {
       if http.response_header.status != 201
-        puts [ '#' * 5,
-               http.last_effective_url,
-               http.response_header.status,
-               '#' * 5
-             ].join(' ')
+        log_error(http,last_effective_url, http.response_header.status)
       end
     }
     http.errback {
-      puts [ '#' * 5,
-             http.last_effective_url,
-             'ERR',
-             '#' * 5
-           ].join(' ')
+      log_error(http,last_effective_url, 'ERR')
     }
   end
 
-private
-
-  def self.fetch_drop_content(slug)
-    request = EM::HttpRequest.new("http://#{ base_uri }/#{ slug }").
-                              get(:head => { 'Accept'=> 'application/json' })
-
+  def fetch_content(slug)
+    request = http_request(api_url(slug)).get(:head => {'Accept'=> 'application/json'})
     raise NotFound unless request.response_header.status == 200
-
     request.response
+  end
+
+  def log_error(last_url, status)
+    logger.call [ '#' * 5, last_url, status, '#' * 5 ].join(' ')
   end
 
 end

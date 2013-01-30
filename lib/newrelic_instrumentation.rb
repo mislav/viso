@@ -11,21 +11,10 @@ Drop.class_eval do
 end
 
 DropFetcher.instance_eval do
-  class << self
-    include NewRelic::Agent::MethodTracer
+  include NewRelic::Agent::MethodTracer
 
-    add_method_tracer :fetch,              'Custom/DropFetcher/fetch'
-    add_method_tracer :fetch_drop_content, 'Custom/DropFetcher/fetch_drop_content'
-  end
-end
-
-DomainFetcher.instance_eval do
-  class << self
-    include NewRelic::Agent::MethodTracer
-
-    add_method_tracer :fetch,                'Custom/DomainFetcher/fetch'
-    add_method_tracer :fetch_domain_content, 'Custom/DomainFetcher/fetch_domain_content'
-  end
+  add_method_tracer :fetch,         'Custom/DropFetcher/fetch'
+  add_method_tracer :fetch_content, 'Custom/DropFetcher/fetch_drop_content'
 end
 
 class NewRelicInstrumentationMiddleware

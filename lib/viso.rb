@@ -27,20 +27,24 @@ require 'configuration'
 require 'drop'
 require 'drop_fetcher'
 require 'drop_presenter'
-require 'domain'
-require 'domain_fetcher'
 
 require 'base64'
 
 class Viso < Sinatra::Base
   register Configuration
 
+  DROP_FETCHER = DropFetcher.new(:api_host => settings.cloudapp.api_host)
+
+  DOMAIN_FETCHER = DropFetcher.new(:api_host => settings.cloudapp.api_host,
+                                   :drop_factory => lambda {|_, data| data[:home_page] })
+
   # The home page. Custom domain users have the option to set a home page so
   # ping the API to get the home page for the current domain. Response is cached
   # for one hour.
   get '/' do
     cache_duration 3600
-    redirect DomainFetcher.fetch(env['HTTP_HOST']).home_page, 301
+    home_page = DOMAIN_FETCHER.fetch("domains/#{request.host}")
+    redirect home_page, 301
     ## Last-Modified
   end
 
@@ -118,7 +122,7 @@ class Viso < Sinatra::Base
   end
 
   def redirect_to_content(slug, remote_url, updated_at = nil)
-    DropFetcher.record_view slug
+    DROP_FETCHER.record_view slug
     cache_duration 0
     last_modified updated_at if updated_at
     redirect remote_url, 301
@@ -141,7 +145,7 @@ protected
   # `DropFetcher::NotFound` errors and render the not found response.
   def fetch_drop(slug)
     Metriks.timer('drop.fetch').time do
-      DropFetcher.fetch slug
+      DROP_FETCHER.fetch slug
     end
   rescue DropFetcher::NotFound
     not_found
@@ -153,7 +157,7 @@ protected
 
     respond_to {|format|
       format.html {
-        DropFetcher.record_view slug if drop.bookmark? || drop.text?
+        DROP_FETCHER.record_view slug if drop.bookmark? || drop.text?
         cache_duration 0
         last_modified drop.updated_at
         drop.render_html
@@ -208,7 +212,7 @@ protected
     unless custom_domain_matches? drop
       puts [ '*' * 5,
              drop.data[:url].inspect,
-             env['HTTP_HOST'].inspect,
+             request.host.inspect,
              '*' * 5
            ].join(' ')
 
@@ -218,18 +222,22 @@ protected
 
   def custom_domain_matches?(drop)
     domain   = Addressable::URI.parse(drop.data[:url]).host
-    host     = env['HTTP_HOST'].split(':').first
-    expected = SimpleIDN.to_ascii(domain).downcase
-    actual   = SimpleIDN.to_ascii(host).downcase
+    expected = normalize_domain(domain)
+    actual   = normalize_domain(request.host)
 
-    DropFetcher.default_domains.include?(actual) or
-      actual == expected or
-      actual.sub(/^www\./, '') == expected
+    # TODO: more descriptive naming
+    whitelisted = settings.cloudapp.domains.split(' ')
+
+    whitelisted.include?(actual) || expected == actual
+  end
+
+  def normalize_domain(domain)
+    SimpleIDN.to_ascii(domain).downcase.sub(/^www\./, '')
   end
 
   # Redirect the current request to the same path on the API domain.
   def redirect_to_api
     cache_duration 3600
-    redirect "http://#{ DropFetcher.base_uri }#{ request.path }", 301
+    redirect DROP_FETCHER.api_url(request.path), 301
   end
 end
