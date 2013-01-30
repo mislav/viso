@@ -14,7 +14,7 @@ class Content
 
         EM::Synchrony.defer {
           emojied = Metriks.timer('markdown.emoji').time {
-            EmojiedHTML.new(downloaded).render
+            EmojiedHTML.new(asset_host).render(downloaded)
           }
 
           Redcarpet::Markdown.
@@ -30,45 +30,16 @@ class Content
           .markdown
           .txt ).include? extension
     end
-
-  private
-
-    def extension
-      @url and File.extname(@url).downcase
-    end
   end
 
-  class EmojiedHTML
-    attr_reader :content
-
-    def self.asset_host
-      @asset_host ||= [ ENV.fetch('CLOUDFRONT_DOMAIN'),
-                        ENV.fetch('RAILS_ASSET_ID') ].join('/')
-    end
-    class << self
-      attr_writer :asset_host
-    end
-
-    def initialize(content)
-      @content = content
-    end
-
-    def render
+  EmojiedHTML = Struct.new(:asset_host) do
+    def render(content)
       content.gsub(/:([a-z0-9\+\-_]+):/) do |match|
-        if Emoji.include?($1)
-          emoji_image_tag($1)
-        else
-          match
-        end
+        name = $1
+        Emoji.include?(name) ? emoji_image_tag(name) : match
       end
     rescue ArgumentError
       content
-    end
-
-  private
-
-    def asset_host
-      self.class.asset_host
     end
 
     def emoji_image_tag(name)

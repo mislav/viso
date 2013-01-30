@@ -41,10 +41,6 @@ class Content
       %{<div class="highlight"><pre><code>#{ escaped_raw }</code></pre></div>}
     end
 
-    def extension
-      @url and File.extname(@url).downcase
-    end
-
   private
 
     class Pygments

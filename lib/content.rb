@@ -9,8 +9,20 @@ class Content
   include Code
   include Markdown
 
-  def initialize(url)
-    @url = url
+  def initialize(drop)
+    @drop = drop
+  end
+
+  def url
+    @drop.remote_url
+  end
+
+  def asset_host
+    @drop.asset_host
+  end
+
+  def extension
+    url and File.extname(url).downcase
   end
 
   def raw
@@ -19,7 +31,7 @@ class Content
     # the encoding along with the file is discovered and implemented.
     @raw ||= begin
                Metriks.timer('download-content').time {
-                 EM::HttpRequest.new(@url).get(:redirects => 3).response.
+                 EM::HttpRequest.new(url).get(:redirects => 3).response.
                    force_encoding(Encoding::UTF_8)
                }
              end
