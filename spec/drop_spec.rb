@@ -184,10 +184,16 @@ describe Drop do
   end
 
   describe '#plain_text?' do
+    context 'a TEXT file' do
+      let(:data)        {{ content_url: content_url, item_type: 'text' }}
+      let(:content_url) { 'http://cl.ly/hhgttg/chapter1.text' }
+      it { should be_plain_text }
+    end
+
     context 'a TXT file' do
       let(:data)        {{ content_url: content_url, item_type: 'text' }}
       let(:content_url) { 'http://cl.ly/hhgttg/chapter1.txt' }
-      it { should be_plain_text }
+      it { should_not be_plain_text }
     end
 
     context 'an image' do
@@ -234,7 +240,7 @@ describe Drop do
     it { should_not be_text }
 
     context 'a plain text file' do
-      let(:content_url) { 'http://cl.ly/hhgttg/chapter1.txt' }
+      let(:content_url) { 'http://cl.ly/hhgttg/chapter1.text' }
       it { should be_text }
     end
 

@@ -55,7 +55,7 @@ class Drop
   end
 
   def plain_text?
-    extension == '.txt'
+    extension == '.text'
   end
 
   def text?

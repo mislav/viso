@@ -1,3 +1,4 @@
+require 'helper'
 require 'support/vcr'
 require 'content'
 
@@ -45,10 +46,10 @@ describe Content do
 
   describe '#content' do
     it 'integrates with Raw' do
-      drop = Content.new 'http://f.cl.ly/items/hhgttg/Chapter%201.txt'
+      drop = Content.new 'http://f.cl.ly/items/hhgttg/Chapter%201.text'
 
       EM.synchrony do
-        VCR.use_cassette 'text' do
+        VCR.use_cassette 'plain_text' do
           drop.content.start_with?('<pre><code>Chapter 1').should be_true
         end
 

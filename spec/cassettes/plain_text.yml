@@ -1,0 +1,51 @@
+---
+- !ruby/struct:VCR::HTTPInteraction
+  request: !ruby/struct:VCR::Request
+    method: :get
+    uri: http://f.cl.ly:80/items/hhgttg/Chapter%201.text
+    body: 
+    headers: 
+  response: !ruby/struct:VCR::Response
+    status: !ruby/struct:VCR::ResponseStatus
+      code: 200
+      message: OK
+    headers:
+      !binary "eC1hbXotaWQtMg==":
+      - !binary |-
+        U2hzS3pWZmRadzFINjVsMGVuOFJDN1BsN0xmWFoveWQyTmU2VXVBSDFVTUVm
+        TFBVS1NXblVmSll1d2lFa25Vbw==
+      !binary "eC1hbXotcmVxdWVzdC1pZA==":
+      - !binary |-
+        NjE3OTM5OUFBMDZBN0ZDOA==
+      !binary "ZGF0ZQ==":
+      - !binary |-
+        VHVlLCAyOSBKYW4gMjAxMyAxNDoxMjoxMiBHTVQ=
+      !binary "bGFzdC1tb2RpZmllZA==":
+      - !binary |-
+        VHVlLCAyOSBKYW4gMjAxMyAxNDowNzoxMiBHTVQ=
+      !binary "ZXRhZw==":
+      - !binary |-
+        ImE5YjE5ZTY1NjYzY2UyZGFlODE3MDFiYTQ4MTJhY2VkIg==
+      !binary "YWNjZXB0LXJhbmdlcw==":
+      - !binary |-
+        Ynl0ZXM=
+      !binary "Y29udGVudC10eXBl":
+      - !binary |-
+        YmluYXJ5L29jdGV0LXN0cmVhbQ==
+      !binary "Y29udGVudC1sZW5ndGg=":
+      - !binary |-
+        Mzc4
+      !binary "c2VydmVy":
+      - !binary |-
+        QW1hem9uUzM=
+    body: !binary |-
+      Q2hhcHRlciAxCgpUaGUgaG91c2Ugc3Rvb2Qgb24gYSBzbGlnaHQgcmlzZSBq
+      dXN0IG9uIHRoZSBlZGdlIG9mIHRoZSB2aWxsYWdlLiBJdCBzdG9vZCBvbiBp
+      dHMgb3duIGFuZCBsb29rZWQgb3V0IG92ZXIgYSBicm9hZCBzcHJlYWQgb2Yg
+      V2VzdCBDb3VudHJ5IGZhcm1sYW5kLiBOb3QgYSByZW1hcmthYmxlIGhvdXNl
+      IGJ5IGFueSBtZWFuc+KAlGl0IHdhcyBhYm91dCB0aGlydHkgeWVhcnMgb2xk
+      LCBzcXVhdHRpc2gsIHNxdWFyaXNoLCBtYWRlIG9mIGJyaWNrLCBhbmQgaGFk
+      IGZvdXIgd2luZG93cyBzZXQgaW4gdGhlIGZyb250IG9mIGEgc2l6ZSBhbmQg
+      cHJvcG9ydGlvbiB3aGljaCBtb3JlIG9yIGxlc3MgZXhhY3RseSBmYWlsZWQg
+      dG8gcGxlYXNlIHRoZSBleWUu
+    http_version: '1.1'
