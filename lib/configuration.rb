@@ -18,7 +18,9 @@ module Configuration
   # Runs in the context of a Sinatra application
   class Configurer < SimpleDelegator
     def inject config_file
-      apply_settings config_file
+      apply_settings(config_file)
+      unversioned_file = config_file.sub(/(\.ya?ml)$/, '.local\1')
+      apply_settings(unversioned_file) if File.exist? unversioned_file
 
       add_metriks_instrumentation
       add_new_relic_instrumentation
@@ -34,7 +36,15 @@ module Configuration
 
     def apply_settings config_file
       load_settings(config_file, environment).each do |key, value|
-        value = OpenStruct.new(value) if value.is_a? Hash
+        if value.is_a? Hash
+          if existing = respond_to?(key) && send(key) and existing.is_a? OpenStruct
+            value.each do |nested_key, nested_value|
+              existing.send("#{nested_key}=", nested_value)
+            end
+          else
+            value = OpenStruct.new(value)
+          end
+        end
         set(key, value)
       end
     end
