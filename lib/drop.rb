@@ -13,6 +13,8 @@ class Drop
     @content = Content.new(self)
   end
 
+  def asset_host() "" end
+
   def_delegators :@content, :content, :markdown?, :code?
 
   def subscribed?()   @data[:subscribed]    end

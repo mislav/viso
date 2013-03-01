@@ -4,8 +4,18 @@ require 'content'
 
 describe Content do
 
+  subject { create_content(url) }
+
+  def create_content(url)
+    Content.new(create_slug(url))
+  end
+
+  def create_slug(url)
+    double(:slug, :remote_url => url, :asset_host => "")
+  end
+
   describe '#raw' do
-    subject { Content.new 'http://f.cl.ly/items/hhgttg/Chapter%201.txt' }
+    let(:url) { 'http://f.cl.ly/items/hhgttg/Chapter%201.txt' }
 
     it 'fetches content' do
       EM.synchrony do
@@ -31,7 +41,7 @@ describe Content do
   end
 
   describe '#escaped_raw' do
-    subject { Content.new 'http://f.cl.ly/items/hhgttg/hello.rb' }
+    let(:url) { 'http://f.cl.ly/items/hhgttg/hello.rb' }
 
     it 'escapes raw content' do
       EM.synchrony do
@@ -46,7 +56,7 @@ describe Content do
 
   describe '#content' do
     it 'integrates with Raw' do
-      drop = Content.new 'http://f.cl.ly/items/hhgttg/Chapter%201.text'
+      drop = create_content 'http://f.cl.ly/items/hhgttg/Chapter%201.text'
 
       EM.synchrony do
         VCR.use_cassette 'plain_text' do
@@ -58,7 +68,7 @@ describe Content do
     end
 
     it 'integrates with Code' do
-      drop = Content.new 'http://f.cl.ly/items/hhgttg/hello.rb'
+      drop = create_content 'http://f.cl.ly/items/hhgttg/hello.rb'
 
       EM.synchrony do
         VCR.use_cassette 'ruby' do
@@ -70,7 +80,7 @@ describe Content do
     end
 
     it 'integrates with Markdown' do
-      drop = Content.new 'http://f.cl.ly/items/hhgttg/Chapter%201.md'
+      drop = create_content 'http://f.cl.ly/items/hhgttg/Chapter%201.md'
 
       EM.synchrony do
         VCR.use_cassette 'markdown' do

@@ -25,7 +25,7 @@ describe Viso do
   end
 
   def assert_last_modified(date)
-    assert { headers['Last-Modified'] == Time.parse(date).httpdate }
+    headers['Last-Modified'].should eq(Time.parse(date).httpdate)
   end
 
   def deny_last_modified
@@ -46,6 +46,9 @@ describe Viso do
     last_response.headers
   end
 
+  let(:drop_fetcher) {
+    DropFetcher.new(:api_host => 'api.cld.me')
+  }
 
   it "redirects the home page to the domain's home page" do
     EM.synchrony do
@@ -198,7 +201,7 @@ describe Viso do
       VCR.use_cassette 'text' do
         header 'Accept', 'application/json'
         get '/text/hhgttg/download/Chapter%201.txt'
-        drop = DropFetcher.fetch 'hhgttg'
+        drop = drop_fetcher.fetch 'hhgttg'
         EM.stop
 
         assert { last_response.ok? }
@@ -216,7 +219,7 @@ describe Viso do
       VCR.use_cassette 'text' do
         header 'Accept', 'application/json'
         get '/hhgttg/download/Chapter%201.txt'
-        drop = DropFetcher.fetch 'hhgttg'
+        drop = drop_fetcher.fetch 'hhgttg'
         EM.stop
 
         assert { last_response.ok? }
@@ -626,7 +629,7 @@ describe Viso do
       VCR.use_cassette 'text' do
         header 'Accept', 'application/json'
         get    '/text/hhgttg'
-        drop = DropFetcher.fetch 'hhgttg'
+        drop = drop_fetcher.fetch 'hhgttg'
         EM.stop
 
         assert { last_response.ok? }
@@ -644,7 +647,7 @@ describe Viso do
       VCR.use_cassette 'text' do
         header 'Accept', 'application/json'
         get    '/hhgttg'
-        drop = DropFetcher.fetch 'hhgttg'
+        drop = drop_fetcher.fetch 'hhgttg'
         EM.stop
 
         assert { last_response.ok? }
@@ -662,7 +665,7 @@ describe Viso do
       VCR.use_cassette 'text_content' do
         header 'Accept', 'application/json'
         get    '/text/hhgttg/Chapter%201.txt'
-        drop = DropFetcher.fetch 'hhgttg'
+        drop = drop_fetcher.fetch 'hhgttg'
         EM.stop
 
         assert { last_response.ok? }
@@ -719,7 +722,7 @@ describe Viso do
       get '/images/favicon.ico'
       EM.stop
 
-      assert { headers['Cache-Control'] == "public, max-age=31557600" }
+      headers['Cache-Control'].should eq("public, max-age=31536000")
     end
   end
 
@@ -781,6 +784,27 @@ describe Viso do
         assert { last_response.status == 304 }
         assert_cached_for 0
         assert_last_modified '2012-10-05T00:01:45Z'
+      end
+    end
+  end
+
+  it 'is affected by assets.timestamp' do
+    EM.synchrony do
+      VCR.use_cassette 'text' do
+        stub_request(:post, 'http://api.cld.me/hhgttg/view').
+          to_return(:status => [201, 'Created'])
+
+        old_timestamp = app.assets.timestamp
+        app.assets.timestamp = Time.parse('2013-03-01T19:43:00Z').to_i
+        begin
+          get '/hhgttg'
+          EM.stop
+        ensure
+          app.assets.timestamp = old_timestamp
+        end
+
+        last_response.status.should eq(200)
+        assert_last_modified '2013-03-01T19:43:00Z'
       end
     end
   end

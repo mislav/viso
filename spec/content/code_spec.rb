@@ -14,6 +14,10 @@ describe Content::Code do
       def initialize(url) @url = url end
       def raw() "puts 'Hello, world!'" end
       alias_method :escaped_raw, :raw
+
+      def extension
+        @url.match(/\.\w+$/)[0]
+      end
     end
   end
 

@@ -15,6 +15,12 @@ describe Content::Markdown do
         @url = url
         @raw = raw
       end
+
+      def asset_host() 'emoji.com' end
+
+      def extension
+        @url && File.extname(@url).downcase
+      end
     end
   end
 
@@ -36,8 +42,6 @@ describe Content::Markdown do
     end
 
     context 'emoji' do
-      before do Content::EmojiedHTML.asset_host = 'emoji.com' end
-
       it 'interpolates emoji icons' do
         EM.synchrony do
           drop  = FakeContent.new('http://cl.ly/hhgttg/chapter1.md',
