@@ -42,9 +42,11 @@ module Configuration
             end
           else
             value = OpenStruct.new(value)
+            set(key, value)
           end
+        else
+          set(key, value)
         end
-        set(key, value)
       end
     end
 
