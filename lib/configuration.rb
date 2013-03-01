@@ -153,7 +153,7 @@ module Configuration
       elsif development?
         require 'metriks/reporter/logger'
         Metriks::Reporter::Logger.new(logger:   Logger.new(STDOUT),
-                                      interval: 10).start
+                                      interval: metrics.logger_interval).start
       end
     end
   end

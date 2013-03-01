@@ -23,6 +23,8 @@ defaults: &defaults
   google_analytics:
     domain:      <%= ENV['GOOGLE_ANALYTICS_DOMAIN'] %>
     token:       <%= ENV['GOOGLE_ANALYTICS_TOKEN'] %>
+  metrics:
+    logger_interval: 10
 
 development:
   <<: *defaults
