@@ -12,7 +12,6 @@ module Configuration
   class Configurer < SimpleDelegator
     def inject
       add_metriks_instrumentation
-      add_new_relic_instrumentation
       catch_errors_with_airbrake
       handle_requests_using_fiber_pool
 
@@ -26,26 +25,6 @@ module Configuration
     def add_metriks_instrumentation
       require 'metriks/middleware'
       use Metriks::Middleware
-    end
-
-    def add_new_relic_instrumentation
-      configure :production do
-        require 'newrelic_rpm'
-      end
-
-      configure :development do
-        require 'new_relic/control'
-        NewRelic::Control.instance.init_plugin 'developer_mode' => true,
-          :env => 'development'
-
-        require 'new_relic/rack/developer_mode'
-        use NewRelic::Rack::DeveloperMode
-      end
-
-      configure :production, :development do
-        require 'newrelic_instrumentation'
-        use NewRelicInstrumentationMiddleware
-      end
     end
 
     def catch_errors_with_airbrake
@@ -113,10 +92,6 @@ module Configuration
                                               prefix:   prefix,
                                               on_error: on_error,
                                               source:   source).start
-      elsif development?
-        require 'metriks/reporter/logger'
-        Metriks::Reporter::Logger.new(logger:   Logger.new(STDOUT),
-                                      interval: 10).start
       end
     end
   end

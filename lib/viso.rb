@@ -68,6 +68,7 @@ class Viso < Sinatra::Base
   get %r{^
          (?:/(?:text|code|image))?  # Optional drop type
          /([^/?#]+)                 # Item slug
+         (?:/o)?                    # Show original image size
          /status                    #
          $}x do |slug|
     fetch_and_render_status slug
@@ -118,9 +119,12 @@ class Viso < Sinatra::Base
   end
 
   def redirect_to_content(slug, remote_url, updated_at = nil)
-    DropFetcher.record_view slug
+    DropFetcher.record_view slug if remote_url
+
     cache_duration 0
     last_modified updated_at if updated_at
+
+    not_found and return unless remote_url
     redirect remote_url, 301
   end
 

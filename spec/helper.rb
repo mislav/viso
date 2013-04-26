@@ -1,6 +1,9 @@
-require 'rubygems'
+# Something is requiring typhoeus from rubygems and I can't figure it out.
+# Need to call Bundler.setup to prevent access to rubygems.
 require 'bundler'
-Bundler.setup :default, :test
+Bundler.setup
+
+require 'support/rspec'
 
 ENV['RACK_ENV'] = 'test'
 
