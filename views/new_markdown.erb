@@ -1,3 +1,35 @@
+<style type="text/css">
+  #markdown.quote blockquote {
+    color: inherit;
+    font-size: 1.2em;
+    font-style: normal;
+    line-height: 1.6;
+    padding-left: 0;
+    border: none;
+  }
+  #markdown.quote p {
+    font-style: italic;
+    color: #666;
+  }
+  #markdown.quote > div {
+    padding: 1em 2em;
+    background: #f8f8f8;
+    border-radius: 12px;
+    box-shadow: rgba(0,0,0,.25) 0 4px 20px, rgba(0,0,0,.05) 0 0 100px inset;
+  }
+  #markdown.quote > div > *:first-child {
+    margin-top: 15px;
+  }
+</style>
+
 <section id="markdown" class="wrapper">
   <%= drop.content %>
 </section>
+
+<script>
+  var md = $('#markdown'), els = md.children()
+  if (els.size() <= 2 && els.is('blockquote')) {
+    md.addClass('quote')
+    if ($(window).width() >= 800) els.wrapAll('<div>')
+  }
+</script>
