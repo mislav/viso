@@ -11,6 +11,11 @@ describe Drop do
     it { should_not be_beta }
 
     context 'using the beta mac app' do
+      let(:data) {{ source: 'CloudApp/2.0 beta 22 (Mac OS X 10.7.3)' }}
+      it { should be_beta }
+    end
+
+    context 'using an old beta mac app' do
       let(:data) {{ source: 'Cloud/2.0 beta 22 (Mac OS X 10.7.3)' }}
       it { should be_beta }
     end
