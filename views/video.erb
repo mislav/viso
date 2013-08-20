@@ -1,5 +1,6 @@
 <section id=video class=wrapper>
-  <video autoplay id=content src="<%= drop.content_url %>">
+  <% loop_attr = drop.name =~ /\bloop\b/i ? ' loop' : '' %>
+  <video autoplay<%= loop_attr %> id=content src="<%= drop.content_url %>">
     <figure class="<%= drop.item_type %>"></figure>
 
     <h2><%= escape_html drop.name %></h2>
@@ -8,4 +9,30 @@
       <a href="<%= drop.download_url %>">Download</a>
     </p>
   </video>
+
+  <style type="text/css">
+    video { max-width: 100% }
+  </style>
+
+  <script>
+    $('video').on('click', function(e){
+      if (e.which == 1) {
+        if (this.paused) {
+          this.play()
+        } else {
+          this.pause()
+        }
+      }
+    })
+
+    // "loop" attribute polyfill
+    $('video').each(function(i, video){
+      if (typeof video.loop !== 'boolean' && video.getAttribute('loop') !== null) {
+        video.on('ended', function(){
+          this.currentTime = 0
+          this.play()
+        })
+      }
+    })
+  </script>
 </section>
