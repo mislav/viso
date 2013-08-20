@@ -32,3 +32,5 @@ group :development do
   gem 'rake'
   gem 'rocco'
 end
+
+ruby '1.9.3'
