@@ -167,7 +167,7 @@ a:visited {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   background: url('/images/new/document.png?1339803718') center top no-repeat;
-  color: #EAEAEA;
+  color: #e5e8e9;
   font-size: 32px;
   -webkit-font-smoothing: antialiased;
   font-weight: bold;
@@ -175,7 +175,7 @@ a:visited {
   margin-bottom: 33px;
   padding-top: 70px;
   text-transform: uppercase;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 -1px rgb(211, 214, 217);
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
   #download .file-type,
@@ -192,11 +192,12 @@ a:visited {
 }
 
 #markdown {
-  font-family: "ff-tisa-web-pro", Georgia, "Times New Roman", serif;
-  line-height: 1.571428571;
+  font-family: "ff-tisa-web-pro", serif;
+  line-height: 2;
+  padding-bottom: 20px;
 }
 #markdown h1, #markdown h2, #markdown h3, #markdown h4, #markdown h5, #markdown h6 {
-  margin: 20px 0 10px;
+  margin: 20px 0;
 }
 #markdown h1:first-child, #markdown h2:first-child, #markdown h3:first-child, #markdown h4:first-child, #markdown h5:first-child, #markdown h6:first-child {
   margin-top: 0;
@@ -208,7 +209,7 @@ a:visited {
   font-weight: bold;
 }
 #markdown h2 {
-  border-bottom: 1px solid #E1E1E1;
+  border-bottom: 1px solid #e1e5e8;
   font-size: 22px;
 }
 #markdown h3 {
@@ -221,11 +222,11 @@ a:visited {
   font-size: 14px;
 }
 #markdown p {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 #markdown ul, #markdown ol {
   padding-left: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 #markdown ul {
   list-style-type: disc;
@@ -242,10 +243,12 @@ a:visited {
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
-  border: 1px solid #CCC;
+  border: 1px solid #e1e5e8;
   font-family: Menlo, Monaco, monospace;
   font-size: 0.857142857em;
-  padding: 1px 3px;
+  padding: 1px 6px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 #markdown pre {
   -webkit-border-radius: 4px;
@@ -253,12 +256,12 @@ a:visited {
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
-  border: 1px solid #CCC;
-  font-family: Menlo, Monaco, monospace;
-  font-size: 0.857142857em;
-  margin-bottom: 15px;
+  border: 1px solid #e1e5e8;
+  font: 12px/18px Menlo, Monaco, monospace;
+  margin-bottom: 30px;
   overflow-x: auto;
   padding: 12px;
+  margin-top: 0;
 }
 #markdown pre code {
   background: transparent;
@@ -379,10 +382,9 @@ body.zoomed-in #image img {
 }
 #header h2 strong {
   font-weight: 600;
-  background: -webkit-linear-gradient(#333, #888);
-  background-size: 100% 16px;
-  background-position: center 4px;
-  background-repeat: repeat-x;
+  background: -webkit-linear-gradient(#111 0%, #666 100%) repeat-x;
+  background: linear-gradient(#111 0%, #666 100%) repeat-x;
+  background-size: 100% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   padding-left: 2px;
