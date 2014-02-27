@@ -17,25 +17,25 @@
 </head>
 
 <body id="<%= body_id %>">
+
   <header id="header">
-    <h1 style="display: none;">CloudApp</h1>
 
     <% unless drop.subscribed? %>
-      <a href="https://itunes.apple.com/us/app/cloud/id417602904?mt=12" class="brand">Start sharing</a>
+      <a href="https://itunes.apple.com/us/app/cloud/id417602904?mt=12" class="brand">Share with CloudApp</a>
     <% end %>
+    
+    <a href="https://itunes.apple.com/us/app/cloud/id417602904?mt=12" class="brand">Share with CloudApp</a>
 
     <h2><strong><%= escape_html drop.basename %></strong><%= escape_html drop.extension %></h2>
 
-    <ul class="menu">
-      <li>
-        <a href="#" class="trigger">Menu</a>
-
-        <ul class="drop-down">
-          <li><a href="<%= drop.content_url %>">Direct Link</a></li>
-          <li><a href="<%= drop.download_url %>">Download Link</a></li>
-        </ul>
-      </li>
-    </ul>
+    <div class="menu">
+      <a href="#" class="trigger">Menu</a>
+      <ul class="drop-down">
+        <li><a href="<%= drop.content_url %>">Direct Link</a></li>
+        <li><a href="<%= drop.download_url %>">Download File</a></li>
+      </ul>
+    </div>
+    
   </header>
 
   <%= yield %>

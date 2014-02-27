@@ -1,17 +1,22 @@
 $(function() {
-  $('.menu .trigger').click(function(e) {
+
+  $('.trigger').click(function(e) {
     e.preventDefault();
     e.stopPropagation();
-    $(this).toggleClass('is-active');
   });
-
-  $('.menu .drop-down').click(function(e) {
-    e.stopPropagation();
+  
+  $('.menu').on('hover', function(){
+    $('.drop-down').addClass('show');
   });
-
+  
+  $('.menu').on('mouseleave', function(e){
+    $('.drop-down').removeClass('show');
+  });
+  
   $(document).click(function(e) {
     if ($('.menu .drop-down').is(':visible')) {
-      $('.menu .trigger').toggleClass('is-active');
+      $('.drop-down').removeClass('show');
     }
   });
+  
 });
