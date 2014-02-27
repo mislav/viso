@@ -307,6 +307,8 @@ a:visited {
   display: block;
   margin: 0 auto;
   max-width: 100%;
+}
+body.zoomed-out #image img {
   cursor: -webkit-zoom-in;
 }
 body.zoomed-in #image img {
