@@ -1,5 +1,15 @@
-<section id="download" class="wrapper">
+<!--<section id="download" class="wrapper">
   <div class="file-type"><%= escape_html(drop.extension).sub(/^\./, '') %></div>
 
-  <a href="<%= drop.download_url %>" class="primary button"><strong><%= escape_html(drop.basename) %></strong><%= escape_html(drop.extension) %></a>
+  <a href="<%= drop.download_url %>" class="primary button download"><strong><%= escape_html(drop.basename) %></strong><%= escape_html(drop.extension) %></a>
+</section>-->
+
+<section id="uploading" class="wrapper">
+  <div class="file-type"><%= escape_html(drop.extension).sub(/^\./, '') %></div>
+
+  <div class="button disabled waiting"><strong><%= escape_html(drop.basename) %></strong><%= escape_html(drop.extension) %></div>
+
+  <p>
+    Sit tight. The file is still being uploaded.
+  </p>
 </section>

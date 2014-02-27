@@ -7,18 +7,32 @@ body {
   background: #fff;
   color: #000;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  line-height: 1;
+  font-size: 14px;
+  line-height: 2;
   text-align: center;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1 {
-  background: url("/images/error-page-logo.png") center top no-repeat;
-  color: #474747;
-  -webkit-font-smoothing: antialiased;
+  position: relative;
   font-size: 36px;
   margin-bottom: 32px;
-  padding-top: 98px;
+  background: -webkit-linear-gradient(#222 0%, #888 100%) repeat-x;
+  background: linear-gradient(#222 0%, #888 100%) repeat-x;
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  width: 111px;
+  height: 79px;
+  background-image: url(/images/new/logo-error.png);
+  top: -98px;
+  left: 50%;
+  margin-left: -54px;
 }
 
 h1 em {
@@ -27,24 +41,30 @@ h1 em {
 }
 
 h2 {
-  color: #AAA;
-  font-size: 16px;
+  color: rgba(117, 123, 126, 0.6);
+  font-size: 18px;
   -webkit-font-smoothing: antialiased;
 }
 
 p {
-  color: #AAA;
-  line-height: 18px;
-  margin-top: 12px;
+  color: rgba(117, 123, 126, 0.4);
+  margin-top: 20px;
 }
 
 a:link, a:visited {
-  color: #477DAF;
+  color: #4888cc;
   font-weight: bold;
   text-decoration: none;
 }
 
 .wrapper {
-  margin: 80px auto;
-  width: 480px;
+  margin: 178px auto 80px;
+  width: 280px;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+  h1::after {
+    background-image: url(/images/new/logo-error@2x.png);
+    background-size: 111px 79px;
+  }
 }

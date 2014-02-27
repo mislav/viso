@@ -13,7 +13,7 @@ $(function() {
     $('.drop-down').removeClass('show');
   });
   
-  $(document).click(function(e) {
+  $(document).click(function() {
     if ($('.menu .drop-down').is(':visible')) {
       $('.drop-down').removeClass('show');
     }
