@@ -5,7 +5,7 @@ $(function() {
     e.stopPropagation();
   });
   
-  $('.menu').on('hover', function(){
+  $('.trigger').on('hover', function(){
     $('.drop-down').addClass('show');
   });
   
