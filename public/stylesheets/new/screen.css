@@ -301,6 +301,29 @@ a:visited {
   vertical-align: middle;
 }
 
+#markdown.quote blockquote {
+  color: inherit;
+  font-size: 1.1em;
+  font-style: normal;
+  line-height: 1.6;
+  padding-left: 0;
+  border: none;
+}
+#markdown.quote blockquote p {
+  font-style: italic;
+  color: #666;
+  text-shadow: white 0 1px 1px;
+}
+#markdown.quote > div {
+  padding: 1em 2em;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+#markdown.quote > div > *:first-child {
+  margin-top: 15px;
+}
+
 #image.wrapper {
   max-width: auto;
 }
