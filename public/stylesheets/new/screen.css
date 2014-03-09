@@ -201,11 +201,12 @@ a:visited {
 }
 
 #markdown {
-  line-height: 2;
+  line-height: 1.5;
   padding-bottom: 20px;
 }
 #markdown h1, #markdown h2, #markdown h3, #markdown h4, #markdown h5, #markdown h6 {
-  margin: 20px 0;
+  color: #555;
+  margin: 20px 0 0 0;
 }
 #markdown h1:first-child, #markdown h2:first-child, #markdown h3:first-child, #markdown h4:first-child, #markdown h5:first-child, #markdown h6:first-child {
   margin-top: 0;
@@ -214,11 +215,7 @@ a:visited {
   font-size: 32px;
   line-height: 1;
 }
-#markdown h2, #markdown h3, #markdown h4, #markdown h5 {
-  font-weight: bold;
-}
 #markdown h2 {
-  border-bottom: 1px solid #e1e5e8;
   font-size: 22px;
 }
 #markdown h3 {
@@ -231,11 +228,11 @@ a:visited {
   font-size: 14px;
 }
 #markdown p {
-  margin-bottom: 20px;
+  margin-bottom: 1em;
 }
 #markdown ul, #markdown ol {
   padding-left: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 1em;
 }
 #markdown ul {
   list-style-type: disc;
@@ -247,10 +244,6 @@ a:visited {
   margin: 0;
 }
 #markdown code {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
   border-radius: 4px;
   border: 1px solid #e1e5e8;
   font-family: Menlo, Monaco, monospace;
@@ -260,10 +253,6 @@ a:visited {
   margin-right: 4px;
 }
 #markdown pre {
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
   border-radius: 4px;
   border: 1px solid #e1e5e8;
   font: 12px/18px Menlo, Monaco, monospace;
@@ -281,7 +270,7 @@ a:visited {
 #markdown blockquote {
   border-left: 3px solid #EEE;
   color: #999;
-  margin-bottom: 15px;
+  margin-bottom: 1em;
   padding-left: 17px;
 }
 #markdown a:link,
