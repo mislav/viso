@@ -311,6 +311,7 @@ fist
 five
 flags
 flashlight
+flipper
 floppy_disk
 flower_playing_cards
 flushed
@@ -460,6 +461,7 @@ lock
 lock_with_ink_pen
 lollipop
 loop
+loud_sound
 loudspeaker
 love_hotel
 love_letter
@@ -524,6 +526,7 @@ new_moon
 new_moon_with_face
 newspaper
 ng
+night_with_stars
 nine
 no_bell
 no_bicycles
