@@ -36,7 +36,7 @@ describe Content::Markdown do
     end
 
     context 'emoji' do
-      before do Content::EmojiedHTML.asset_host = 'emoji.com' end
+      before do Content::EmojiedPygmentizedHTML.asset_host = 'emoji.com' end
 
       it 'interpolates emoji icons' do
         EM.synchrony do
@@ -48,6 +48,18 @@ describe Content::Markdown do
           EM.stop
 
           drop.content.should include(emoji)
+        end
+      end
+
+      it 'escapes emoji names' do
+        EM.synchrony do
+          drop = FakeContent.new('http://cl.ly/hhgttg/chapter1.md',
+                                 '# Chapter 1 :+1:')
+          EM.stop
+
+          content = drop.content
+          content.should_not include(':+1:')
+          content.should include('src="//emoji.com/images/emoji/%2B1.png"')
         end
       end
 

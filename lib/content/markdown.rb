@@ -1,26 +1,25 @@
+require 'cgi'
 require 'content/emoji'
 require 'em-synchrony'
-require 'metriks'
 require 'redcarpet'
 
 class Content
   module Markdown
     def content
       return super unless markdown?
-      Metriks.timer('markdown').time {
-        # Both EM::Synchrony.defer and #raw call Fiber.yield so they can't be
-        # nested. Download content outside the .defer block.
-        downloaded = raw
 
-        EM::Synchrony.defer {
-          emojied = Metriks.timer('markdown.emoji').time {
-            EmojiedHTML.new(downloaded).render
-          }
+      # Both EM::Synchrony.defer and #raw call Fiber.yield so they can't be
+      # nested. Download content outside the .defer block.
+      downloaded = raw
 
-          Redcarpet::Markdown.
-            new(PygmentizedHTML, fenced_code_blocks: true).
-            render(emojied)
-        }
+      EM::Synchrony.defer {
+        renderer = EmojiedPygmentizedHTML.new(filter_html: true)
+        Redcarpet::Markdown.
+          new(renderer, fenced_code_blocks: true,
+                        tables:             true,
+                        strikethrough:      true,
+                        no_intra_emphasis:  true).
+          render(downloaded)
       }
     end
 
@@ -38,9 +37,7 @@ class Content
     end
   end
 
-  class EmojiedHTML
-    attr_reader :content
-
+  class EmojiedPygmentizedHTML < Redcarpet::Render::HTML
     def self.asset_host
       @asset_host ||= [ ENV.fetch('CLOUDFRONT_DOMAIN'),
                         ENV.fetch('RAILS_ASSET_ID') ].join('/')
@@ -49,12 +46,26 @@ class Content
       attr_writer :asset_host
     end
 
-    def initialize(content)
-      @content = content
+    def block_code(code, language)
+      Content::Code.highlight(code, language)
     end
 
-    def render
-      content.gsub(/:([a-z0-9\+\-_]+):/) do |match|
+    def header(text, header_level)
+      %{<h#{header_level}>#{emojify(text)}</h#{header_level}>}
+    end
+
+    def paragraph(text)
+      %{<p>#{emojify(text)}</p>}
+    end
+
+    def list_item(text, list_type)
+      %{<li>#{emojify(text)}</li>}
+    end
+
+  private
+
+    def emojify(text)
+      text.gsub(/:([a-z0-9\+\-_]+):/) do |match|
         if Emoji.include?($1)
           emoji_image_tag($1)
         else
@@ -62,24 +73,17 @@ class Content
         end
       end
     rescue ArgumentError
-      content
+      text
     end
-
-  private
 
     def asset_host
       self.class.asset_host
     end
 
     def emoji_image_tag(name)
-      %{<img alt="#{name}" src="//#{asset_host}/images/emoji/#{name}.png" width="20" height="20" class="emoji" />}
-    end
-  end
-
-  # TODO: This is just a spike.
-  class PygmentizedHTML < Redcarpet::Render::HTML
-    def block_code(code, language)
-      Content::Code.highlight code, language
+      file_name = "#{CGI.escape(name)}.png"
+      %{<img alt="#{name}" src="//#{asset_host}/images/emoji/#{file_name}" } +
+        %{width="20" height="20" class="emoji" />}
     end
   end
 end

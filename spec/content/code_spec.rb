@@ -68,7 +68,7 @@ describe Content::Code do
       expected = %{<div class="highlight"><pre><code>#{ code }</code></pre></div>}
 
       drop = FakeContent.new 'http://cl.ly/hhgttg/hello.rb'
-      drop.stub! :raw => code, :escaped_raw => code
+      drop.stub :raw => code, :escaped_raw => code
 
       drop.content.should == expected
     end
@@ -79,7 +79,7 @@ describe Content::Code do
       expected = %{<div class="highlight"><pre><code>#{ escaped }</code></pre></div>}
 
       drop = FakeContent.new 'http://cl.ly/hhgttg/hello.rb'
-      drop.stub! :raw => code, :escaped_raw => escaped
+      drop.stub :raw => code, :escaped_raw => escaped
 
       drop.content.should == expected
     end
@@ -88,7 +88,7 @@ describe Content::Code do
       EM.synchrony do
         char = '☃'
         drop = FakeContent.new 'http://cl.ly/hhgttg/hello.rb'
-        drop.stub! :raw => char, :escaped_raw => char
+        drop.stub :raw => char, :escaped_raw => char
         EM.stop
 
         drop.content.should include(char)

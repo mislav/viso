@@ -1,15 +1,3 @@
 <section id="image" class="wrapper">
-  <script>var imageLoadStart = new Date();</script>
   <img alt="<%= escape_html drop.name %>" src="<%= drop.content_url %>">
-  <script>
-    (function() {
-      $('img')
-        .load(function() {
-          Metriks.record("image-load", new Date() - imageLoadStart);
-        })
-        .error(function() {
-          Metriks.record("image-error");
-        });
-    }());
-  </script>
 </section>

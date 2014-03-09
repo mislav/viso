@@ -2,3 +2,4 @@ log/newrelic_agent.log
 public/assets
 .rspec
 public/images/emoji
+.assets.env

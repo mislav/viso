@@ -1,5 +1,4 @@
 require 'delegate'
-require 'metriks'
 require 'yajl'
 
 class DropPresenter < SimpleDelegator
@@ -9,20 +8,16 @@ class DropPresenter < SimpleDelegator
   end
 
   def render_html
-    render_timer do
-      if bookmark?
-        @template.redirect remote_url, 301
-      else
-        @template.erb template_name, layout: layout_name,
-                                     locals: { drop: self, body_id: body_id }
-      end
+    if bookmark?
+      @template.redirect remote_url, 301
+    else
+      @template.erb template_name, layout: layout_name,
+                                   locals: { drop: self, body_id: body_id }
     end
   end
 
   def render_json
-    render_timer do
-      Yajl::Encoder.encode data
-    end
+    Yajl::Encoder.encode data
   end
 
   def render_content
@@ -71,9 +66,5 @@ private
     else
       'other'
     end
-  end
-
-  def render_timer(&block)
-    Metriks.timer("drop.render.#{ body_id }").time(&block)
   end
 end

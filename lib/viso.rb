@@ -19,10 +19,10 @@
 # [rack-fiber_pool]: https://github.com/mperham/rack-fiber_pool
 require 'addressable/uri'
 require 'eventmachine'
-require 'metric_recorder'
 require 'sinatra/base'
 require 'simpleidn'
 
+require 'blacklist'
 require 'configuration'
 require 'drop'
 require 'drop_fetcher'
@@ -33,6 +33,7 @@ require 'domain_fetcher'
 require 'base64'
 
 class Viso < Sinatra::Base
+  register Blacklist
   register Configuration
 
   # The home page. Custom domain users have the option to set a home page so
@@ -45,10 +46,9 @@ class Viso < Sinatra::Base
   end
 
   # Record metrics sent by JavaScript clients.
+  # Legacy endpoint. Remove when no longer called.
   get '/metrics' do
-    MetricRecorder.record params['name'], params['value']
-    content_type 'text/javascript'
-    cache_duration 0
+    $stdout.puts '/metrics called'
     status 200
   end
 
@@ -115,6 +115,12 @@ class Viso < Sinatra::Base
       format.json do
         fetch_and_render_drop slug
       end
+
+      # Defult mime type always has the lowest precedence. A request with the
+      # header `Accept: */*` will match the first non-default format.
+      format.on('*/*') do
+        fetch_and_render_content slug, filename
+      end
     }
   end
 
@@ -144,9 +150,7 @@ protected
   # Fetch and return a **Drop** with the given `slug`. Handle
   # `DropFetcher::NotFound` errors and render the not found response.
   def fetch_drop(slug)
-    Metriks.timer('drop.fetch').time do
-      DropFetcher.fetch slug
-    end
+    DropFetcher.fetch slug
   rescue DropFetcher::NotFound
     not_found
   end

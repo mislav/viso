@@ -85,6 +85,11 @@ describe Drop do
       let(:data) {{ redirect_url: 'http://cl.ly/hhgttg/chapter1.txt' }}
       its(:remote_url) { should eq('http://cl.ly/hhgttg/chapter1.txt') }
     end
+
+    context 'a bookmark without protocol' do
+      let(:data) {{ redirect_url: 'cl.ly/hhgttg/chapter1.txt' }}
+      its(:remote_url) { should eq('http://cl.ly/hhgttg/chapter1.txt') }
+    end
   end
 
   describe '#name' do
@@ -209,9 +214,9 @@ describe Drop do
   end
 
   describe '#code?' do
-    let(:content) { stub(:content, code?: code) }
+    let(:content) { double(:content, code?: code) }
     let(:code)    { false }
-    before do Content.stub!(:new).and_return(content) end
+    before do Content.stub(:new).and_return(content) end
 
     it { should_not be_code }
 
@@ -222,9 +227,9 @@ describe Drop do
   end
 
   describe '#markdown?' do
-    let(:content)  { stub(:content, markdown?: markdown) }
+    let(:content)  { double(:content, markdown?: markdown) }
     let(:markdown) { false }
-    before do Content.stub!(:new).and_return(content) end
+    before do Content.stub(:new).and_return(content) end
 
     it { should_not be_markdown }
 
@@ -236,8 +241,8 @@ describe Drop do
 
   describe '#text?' do
     let(:data)        {{ content_url: content_url, item_type: 'text' }}
-    let(:content_url) { stub }
-    let(:content)     { stub(:content, markdown?: markdown, code?: code) }
+    let(:content_url) { double(:content_url) }
+    let(:content)     { double(:content, markdown?: markdown, code?: code) }
     let(:markdown)    { false }
     let(:code)        { false }
     before do Content.stub(new: content) end
@@ -275,7 +280,7 @@ describe Drop do
 
     context 'with a gauge id' do
       let(:data)     {{ gauge_id: gauge_id }}
-      let(:gauge_id) { stub :gauge_id }
+      let(:gauge_id) { double(:gauge_id) }
       its(:gauge_id) { should eq(gauge_id) }
     end
   end

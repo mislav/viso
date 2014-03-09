@@ -5,14 +5,14 @@
 
   (
     export S3_ASSET_BUCKET=assets.vapor.ly
-    bundle exec foreman run jammit-s3 -f
+    bundle exec foreman run jammit-s3 -e .assets.env
   )
   stage
   heroku config:add RAILS_ASSET_ID=$RAILS_ASSET_ID --app viso-staging
 
   (
     export S3_ASSET_BUCKET=assets.cld.me
-    bundle exec foreman run jammit-s3
+    bundle exec foreman run jammit-s3 -e .assets.env
   )
   shipit
   heroku config:add RAILS_ASSET_ID=$RAILS_ASSET_ID --app viso

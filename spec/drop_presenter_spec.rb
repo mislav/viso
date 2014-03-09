@@ -2,27 +2,27 @@ require 'drop_presenter'
 
 describe DropPresenter do
   describe '#render_html' do
-    let(:drop) { stub :drop, slug:       'hhgttg',
-                             beta?:      beta,
-                             bookmark?:  bookmark,
-                             image?:     image,
-                             text?:      text,
-                             markdown?:  markdown,
-                             pending?:   pending,
-                             remote_url: 'http://remote.url',
-                             updated_at: updated_at }
+    let(:drop) { double(:drop, slug:       'hhgttg',
+                               beta?:      beta,
+                               bookmark?:  bookmark,
+                               image?:     image,
+                               text?:      text,
+                               markdown?:  markdown,
+                               pending?:   pending,
+                               remote_url: 'http://remote.url',
+                               updated_at: updated_at) }
     let(:beta)       { false }
     let(:bookmark)   { false }
     let(:image)      { false }
     let(:text)       { false }
     let(:markdown)   { false }
     let(:pending)    { false }
-    let(:updated_at) { stub :updated_at }
+    let(:updated_at) { double(:updated_at) }
     subject { DropPresenter.new drop, template }
 
     describe 'a bookmark drop' do
       let(:bookmark) { true }
-      let(:template) { stub :template, redirect: nil }
+      let(:template) { double(:template, redirect: nil) }
 
       it 'redirects to the bookmarked url' do
         template.should_receive(:redirect).with('http://remote.url', 301)
@@ -44,7 +44,7 @@ describe DropPresenter do
       let(:markdown) { true }
       let(:pending)  { true }
       let(:content)  { 'content' }
-      let(:template) { stub :template, erb: content }
+      let(:template) { double(:template, erb: content) }
 
       it 'renders the erb template with new layout' do
         template.
@@ -70,7 +70,7 @@ describe DropPresenter do
     describe 'an image drop' do
       let(:image)    { true }
       let(:content)  { 'content' }
-      let(:template) { stub :template, erb: content }
+      let(:template) { double(:template, erb: content) }
 
       it 'returns template content' do
         subject.render_html.should == content
@@ -100,7 +100,7 @@ describe DropPresenter do
     describe 'a text drop' do
       let(:text)     { true }
       let(:content)  { 'content' }
-      let(:template) { stub :template, erb: content }
+      let(:template) { double(:template, erb: content) }
 
       it 'returns template content' do
         subject.render_html.should == content
@@ -131,7 +131,7 @@ describe DropPresenter do
       let(:text)     { true }
       let(:markdown) { true }
       let(:content)  { 'content' }
-      let(:template) { stub :template, erb: content }
+      let(:template) { double(:template, erb: content) }
 
       it 'returns template content' do
         subject.render_html.should == content
@@ -160,7 +160,7 @@ describe DropPresenter do
 
     describe 'an unknown drop' do
       let(:content)  { 'content' }
-      let(:template) { stub :template, erb: content }
+      let(:template) { double(:template, erb: content) }
 
       it 'returns template content' do
         subject.render_html.should == content
@@ -189,11 +189,11 @@ describe DropPresenter do
   end
 
   describe '#render_json' do
-    let(:template) { stub :template }
-    let(:drop)     { stub :drop, pending?: false,
-                                 image?:   false,
-                                 text?:    false,
-                                 data:     { key: 'value' }}
+    let(:template) { double(:template) }
+    let(:drop)     { double(:drop, pending?: false,
+                                   image?:   false,
+                                   text?:    false,
+                                   data:     { key: 'value' }) }
     subject { DropPresenter.new drop, template }
 
     it 'returns the drop as json' do
@@ -202,11 +202,11 @@ describe DropPresenter do
   end
 
   describe '#render_content' do
-    let(:template)   { stub :template, redirect_to_content: nil }
-    let(:drop)       { stub :drop, slug:       'hhgttg',
-                                   remote_url: 'http://remote.url',
-                                   updated_at: updated_at }
-    let(:updated_at) { stub :updated_at }
+    let(:template)   { double(:template, redirect_to_content: nil) }
+    let(:drop)       { double(:drop, slug:       'hhgttg',
+                                     remote_url: 'http://remote.url',
+                                     updated_at: updated_at) }
+    let(:updated_at) { double(:updated_at) }
     subject { DropPresenter.new drop, template }
 
     it 'redirects to the content' do

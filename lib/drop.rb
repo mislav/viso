@@ -23,10 +23,16 @@ class Drop
   def download_url()  @data[:download_url]  end
   def name()          @data[:name]          end
   def gauge_id()      @data[:gauge_id]      end
-  def remote_url()    @data[:remote_url] || @data[:redirect_url] end
   def bookmark?()     @data[:item_type] == 'bookmark' end
   def pending?()      @data[:item_type] == 'pending'  end
   def updated_at()    Time.parse @data[:updated_at]   end
+  def remote_url()    @data[:remote_url] || redirect_url end
+
+  def redirect_url
+    url = @data[:redirect_url]
+    return url if url.nil? || includes_protocol?(url)
+    "http://#{url}"
+  end
 
   def beta?
     source = @data.fetch :source, nil
@@ -78,5 +84,11 @@ private
   def file_name
     file_name = pending? ? name : content_url
     file_name.to_s
+  end
+
+  # Regex borrowed from Sinatra
+  # https://github.com/sinatra/sinatra/blob/da3282f/lib/sinatra/base.rb#L265
+  def includes_protocol?(url)
+    url =~ /\A[A-z][A-z0-9\+\.\-]*:/
   end
 end

@@ -1,6 +1,5 @@
 require 'em-synchrony'
 require 'connection_pool'
-require 'metriks'
 require 'pygments.rb'
 
 class Content
@@ -8,20 +7,16 @@ class Content
     # Used by Markdown fenced code blocks. It's already run inside a Defer block
     # so no need to defer here.
     def self.highlight(code, lexer_alias)
-      Metriks.timer('pygments').time {
-        lexer = ::Pygments::Lexer.find lexer_alias
-        Code::Pygments.highlight code, lexer
-      }
+      lexer = ::Pygments::Lexer.find lexer_alias
+      Code::Pygments.highlight code, lexer
     end
 
     def content
       return super unless code?
       return large_content if code_too_large?
 
-      Metriks.timer('pygments').time {
-        EM::Synchrony.defer {
-          Code::Pygments.highlight raw, lexer
-        }
+      EM::Synchrony.defer {
+        Code::Pygments.highlight raw, lexer
       }
     end
 

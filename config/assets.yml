@@ -19,13 +19,11 @@ javascripts:
   viso:
     - public/javascripts/vendor/jquery-1.6.1.min.js
     - public/javascripts/vendor/modernizr-1.7.min.js
-    - public/javascripts/metriks.js
     - public/javascripts/image.js
     - public/javascripts/other.js
   new_viso:
     - public/javascripts/vendor/jquery-1.7.2.min.js
     - public/javascripts/vendor/ios-orientationchange-fix.js
-    - public/javascripts/metriks.js
     - public/javascripts/new_image.js
     - public/javascripts/pop-over.js
     - public/javascripts/pending.js

@@ -1,6 +1,5 @@
 require 'jammit_helper'
 require 'last_modified_or_deployed'
-require 'metriks'
 require 'sinatra/respond_with'
 require 'social_helper'
 
@@ -83,15 +82,24 @@ module Configuration
       token = ENV['LIBRATO_METRICS_TOKEN']
       if user && token
         require 'metriks/reporter/librato_metrics'
-        require 'socket'
 
-        prefix   = ENV['LIBRATO_METRICS_PREFIX']
-        source   = Socket.gethostname
+        prefix = ENV.fetch('LIBRATO_METRICS_PREFIX') do
+          ENV['RACK_ENV'] unless ENV['RACK_ENV'] == 'production'
+        end
+
+        app_name = ENV.fetch('DYNO') do
+          # Fall back to hostname if DYNO isn't set.
+          require 'socket'
+          Socket.gethostname
+        end
+
         on_error = ->(e) do STDOUT.puts("LibratoMetrics: #{ e.message }") end
-        Metriks::Reporter::LibratoMetrics.new(user, token,
-                                              prefix:   prefix,
-                                              on_error: on_error,
-                                              source:   source).start
+        opts     = { on_error: on_error, source: app_name }
+        opts[:prefix] = prefix if prefix && !prefix.empty?
+        Metriks::Reporter::LibratoMetrics.new(user, token, opts).start
+      else
+        require 'metriks/reporter/logger'
+        Metriks::Reporter::Logger.new(logger: $stdout, interval: 10).start
       end
     end
   end

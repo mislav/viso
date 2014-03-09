@@ -23,7 +23,7 @@ describe Content::Raw do
 
     it 'escapes html in content' do
       drop = FakeContent.new 'http://cl.ly/hhgttg/chapter1.txt'
-      drop.stub! :escaped_raw => 'escaped'
+      drop.stub :escaped_raw => 'escaped'
       expected = %{<pre><code>escaped</code></pre>}
 
       drop.content.should == expected

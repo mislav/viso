@@ -129,6 +129,23 @@ describe Viso do
     end
   end
 
+  it 'redirects a content URL to its content with image wildcard accept header' do
+    EM.synchrony do
+      VCR.use_cassette 'image' do
+        stub_request(:post, 'http://api.cld.me/hhgttg/view').
+          to_return(:status => [201, 'Created'])
+
+        header 'Accept', 'image/*'
+        get '/image/hhgttg/Cover.jpeg'
+        EM.stop
+
+        # assert_requested :post, 'http://api.cld.me/hhgttg/view'
+        assert { last_response.status == 301 }
+        assert { headers['Location'] == 'http://f.cl.ly/items/hhgttg/Cover.jpeg' }
+      end
+    end
+  end
+
   it 'redirects a bookmark to its content' do
     EM.synchrony do
       VCR.use_cassette 'bookmark' do
@@ -750,32 +767,6 @@ describe Viso do
     end
   end
 
-  it 'records metrics' do
-    EM.synchrony do
-      get '/metrics?name=image-load&value=42'
-      EM.stop
-
-      assert { last_response.status == 200 }
-      assert { headers['Content-Type'] == 'text/javascript;charset=utf-8' }
-      assert { last_response.body.empty? }
-      assert_cached_for 0
-      deny_last_modified
-    end
-  end
-
-  it 'ignores bogus metrics' do
-    EM.synchrony do
-      get '/metrics?name=image-load&value=forty-two'
-      EM.stop
-
-      assert { last_response.status == 200 }
-      assert { headers['Content-Type'] == 'text/javascript;charset=utf-8' }
-      assert { last_response.body.empty? }
-      assert_cached_for 0
-      deny_last_modified
-    end
-  end
-
   ## Last-Modified
 
   it 'returns a not modified response and records view of a bookmark' do
@@ -902,5 +893,16 @@ describe Viso do
       assert_cached_for 0
       deny_last_modified
     end
+  end
+
+  it "blacklists" do
+    ENV['BLACKLISTED_IPS'] = '127.0.0.1'
+    EM.synchrony do
+      get '/hhgttg'
+      EM.stop
+
+      assert { last_response.status == 404 }
+    end
+    ENV.delete 'BLACKLISTED_IPS'
   end
 end
