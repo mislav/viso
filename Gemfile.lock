@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/igrigorik/em-synchrony.git
-  revision: 9eb4a81903d7df400d7be4173a2faf5662794abb
-  specs:
-    em-synchrony (1.0.3)
-      eventmachine (>= 1.0.0.beta.1)
-
-GIT
   remote: https://github.com/kmamykin/jammit-s3.git
   revision: 2a7245027fa55946f01876a9c638a73fdff0aa29
   specs:
@@ -21,7 +14,8 @@ GEM
     activesupport (3.2.16)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
-    addressable (2.3.5)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     airbrake (3.1.15)
       builder
       multi_json
@@ -35,22 +29,24 @@ GEM
       fssm (>= 0.2.7)
       sass (~> 3.1)
     connection_pool (1.2.0)
-    cookiejar (0.3.0)
+    cookiejar (0.3.3)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
     cssmin (1.0.3)
     daemons (1.1.9)
     diff-lcs (1.2.5)
     dotenv (0.9.0)
-    em-http-request (1.1.2)
+    em-http-request (1.1.5)
       addressable (>= 2.3.4)
-      cookiejar
+      cookiejar (!= 0.3.1)
       em-socksify (>= 0.3)
       eventmachine (>= 1.0.3)
       http_parser.rb (>= 0.6.0)
-    em-socksify (0.3.0)
+    em-socksify (0.3.2)
       eventmachine (>= 1.0.0.beta.4)
-    eventmachine (1.0.3)
+    em-synchrony (1.0.6)
+      eventmachine (>= 1.0.0.beta.1)
+    eventmachine (1.2.7)
     foreman (0.63.0)
       dotenv (>= 0.7)
       thor (>= 0.13.6)
@@ -111,6 +107,7 @@ GEM
     polyglot (0.3.3)
     posix-spawn (0.3.8)
     proxies (0.2.1)
+    public_suffix (3.0.2)
     pygments.rb (0.5.4)
       posix-spawn (~> 0.3.6)
       yajl-ruby (~> 1.1.0)
@@ -176,7 +173,7 @@ DEPENDENCIES
   compass
   connection_pool
   em-http-request (~> 1.0)
-  em-synchrony!
+  em-synchrony
   foreman
   gemoji
   jammit-s3!
@@ -196,3 +193,9 @@ DEPENDENCIES
   vcr (~> 1.11)
   webmock
   yajl-ruby
+
+RUBY VERSION
+   ruby 2.3.7p456
+
+BUNDLED WITH
+   1.16.3
