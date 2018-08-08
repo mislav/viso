@@ -6,7 +6,7 @@ require 'drop'
 class DropFetcher
   class NotFound < StandardError; end
 
-  @base_uri = ENV.fetch 'CLOUDAPP_DOMAIN', 'api.cld.me'
+  @base_uri = ENV.fetch 'CLOUDAPP_DOMAIN', 'cl.ly'
   def self.base_uri() @base_uri end
 
   @default_domains = ENV.fetch('DEFAULT_DOMAINS', 'cl.ly www.cl.ly').split(' ')
@@ -18,6 +18,7 @@ class DropFetcher
   end
 
   def self.record_view(slug)
+    return # TODO: figure out how to do with new API
     http = EM::HttpRequest.
              new("http://#{ DropFetcher.base_uri }/#{ slug }/view").
              apost

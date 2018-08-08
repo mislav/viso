@@ -41,7 +41,8 @@ class Viso < Sinatra::Base
   # for one hour.
   get '/' do
     cache_duration 3600
-    redirect DomainFetcher.fetch(env['HTTP_HOST']).home_page, 301
+    # redirect DomainFetcher.fetch(env['HTTP_HOST']).home_page, 301
+    redirect 'https://app.cl.ly/drops', 302
     ## Last-Modified
   end
 
@@ -225,6 +226,8 @@ protected
   end
 
   def custom_domain_matches?(drop)
+    return true if "http://mislav.uniqpath.com" == drop.homepage
+
     domain   = Addressable::URI.parse(drop.data[:url]).host
     host     = env['HTTP_HOST'].split(':').first
     expected = SimpleIDN.to_ascii(domain).downcase

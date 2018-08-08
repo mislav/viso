@@ -22,6 +22,7 @@ class Drop
   def content_url()   @data[:content_url]   end
   def download_url()  @data[:download_url]  end
   def name()          @data[:name]          end
+  def homepage()      @data[:homepage]      end
   def gauge_id()      @data[:gauge_id]      end
   def bookmark?()     @data[:item_type] == 'bookmark' end
   def pending?()      @data[:item_type] == 'pending'  end
